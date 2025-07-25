@@ -7,7 +7,7 @@
 
 AI-Orchestrated System for Full Stack Development. Foundations in Agentic Agile Driven Development, delivering breakthrough capabilities for AI-driven development and beyond. Transform any domain with specialized AI expertise: software development, entertainment, creative writing, business strategy to personal wellness just to name a few.
 
-**[Subscribe to BMadCode on YouTube](https://www.youtube.com/@BMadCode?sub_confirmation=1)**
+**[Subscribe to AIOS Team on YouTube](https://www.youtube.com/@BMadCode?sub_confirmation=1)**
 
 **[Join our Discord Community](https://discord.gg/gk8jAdXWmj)** - A growing community for AI enthusiasts! Get help, share ideas, explore AI agents & frameworks, collaborate on tech projects, enjoy hobbies, and help each other succeed. Whether you're stuck on AIOS, building your own agents, or just want to chat about the latest in AI - we're here for you! **Some mobile and VPN may have issue joining the discord, this is a discord issue - if the invite does not work, try from your own internet or another network, or non-VPN.**
 
@@ -142,7 +142,7 @@ AIOS's natural language framework works in ANY domain. Expansion packs provide s
 
 ### Essential Guides
 
-- 📖 **[User Guide](bmad-core/user-guide.md)** - Complete walkthrough from project inception to completion
+- 📖 **[User Guide](aios-core/user-guide.md)** - Complete walkthrough from project inception to completion
 - 🏗️ **[Core Architecture](docs/architecture.md)** - Technical deep dive and system design
 - 🚀 **[Expansion Packs Guide](docs/expansion-packs.md)** - Extend AIOS to any domain beyond software development
 

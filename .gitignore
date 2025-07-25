@@ -39,6 +39,7 @@ CLAUDE.md
 
 # Project-specific
 .bmad-core
+.aios-core
 .bmad-creator-tools
 test-project-install/*
 sample-project/*
