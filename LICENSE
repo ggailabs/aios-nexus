@@ -1,7 +1,12 @@
 MIT License
 
+Copyright (c) 2025-2026 Guilherme Giorgi, Genesis Grid AI Labs
 Copyright (c) 2025 BMad Code, LLC (BMad Method - original work)
 Copyright (c) 2025 SynkraAI Inc. (AIOS Framework - derivative work)
+
+AIOS Nexus was developed by Guilherme Giorgi at Genesis Grid AI Labs,
+combining and unifying concepts from AIOS Core, GGAI Nexus, AI-Coders Context,
+and Antigravity Kit.
 
 This project was originally derived from the BMad Method
 (https://github.com/bmad-code-org/BMAD-METHOD), created by Brian Madison.

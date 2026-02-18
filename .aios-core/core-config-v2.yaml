@@ -1,0 +1,353 @@
+# AIOS Nexus Core Configuration
+
+version: '5.0.0'
+framework: aios-nexus
+
+# =============================================================================
+# PROJECT METADATA
+# =============================================================================
+
+project:
+  name: AIOS Nexus
+  description: Framework Unificado de Desenvolvimento com IA
+  author: GG.AI Labs
+  license: MIT
+  repository: https://github.com/ggailabs/aios-nexus
+
+# =============================================================================
+# CONTEXT ENGINEERING
+# =============================================================================
+
+context:
+  root: .context
+  docs:
+    location: .context/docs
+    autoGenerate: true
+    templates: .aios-core/development/templates/docs
+  agents:
+    location: .context/agents
+    count: 15
+    source: .context/agents
+  skills:
+    location: .context/skills
+    categories:
+      - frontend
+      - backend
+      - database
+      - devops
+      - security
+      - quality
+      - platform
+  plans:
+    location: .context/plans
+    format: markdown
+  workflows:
+    location: .context/workflows
+    format: yaml
+
+# =============================================================================
+# WORKFLOW SYSTEM
+# =============================================================================
+
+workflow:
+  system: PREVC
+  phases:
+    - id: P
+      name: Plan
+      agents: [orchestrator, pm, po, sm, analyst]
+      outputs: [prd, specs, stories]
+    - id: R
+      name: Review
+      agents: [architect, security, reviewer, optimizer]
+      outputs: [architecture, adr, security-review]
+    - id: E
+      name: Execute
+      agents: [developer, data-engineer, mobile]
+      outputs: [code, tests, migrations]
+    - id: V
+      name: Validate
+      agents: [qa, reviewer, security, optimizer]
+      outputs: [qa-report, coverage, benchmarks]
+    - id: C
+      name: Confirm
+      agents: [devops, writer]
+      outputs: [release, docs, changelog]
+
+  scaleRouting:
+    QUICK:
+      phases: [E, V]
+      estimatedTime: 5min
+    SMALL:
+      phases: [P, E, V]
+      estimatedTime: 15min
+    MEDIUM:
+      phases: [P, R, E, V]
+      estimatedTime: 30min
+    LARGE:
+      phases: [P, R, E, V, C]
+      estimatedTime: 60min
+
+# =============================================================================
+# MULTI-IDE SYNC
+# =============================================================================
+
+sync:
+  source: .context
+  targets:
+    claude-code:
+      enabled: true
+      directory: .claude
+      files:
+        - CLAUDE.md
+        - commands/
+        - hooks/
+        - skills/
+    cursor:
+      enabled: true
+      directory: .cursor
+      files:
+        - rules/
+        - mcp.json
+    windsurf:
+      enabled: true
+      directory: .windsurf
+      files:
+        - rules/
+        - skills/
+        - workflows/
+    codex:
+      enabled: true
+      directory: .codex
+      files:
+        - agents/
+        - skills/
+      rootFile: AGENTS.md
+    gemini:
+      enabled: true
+      directory: .gemini
+      files:
+        - rules/
+        - commands/
+        - hooks/
+    github-copilot:
+      enabled: true
+      directory: .github
+      files:
+        - copilot-instructions.md
+    antigravity:
+      enabled: true
+      directory: .agent
+      files:
+        - agents/
+        - skills/
+        - workflows/
+    vscode:
+      enabled: true
+      directory: .vscode
+      files:
+        - settings.json
+        - mcp.json
+
+  autoSync: false
+  watchMode: false
+
+# =============================================================================
+# QUALITY GATES
+# =============================================================================
+
+qualityGates:
+  prePush:
+    - name: lint
+      command: npm run lint
+      severity: BLOCK
+      timeout: 60000
+    - name: typecheck
+      command: npm run typecheck
+      severity: BLOCK
+      timeout: 120000
+    - name: test
+      command: npm test
+      severity: BLOCK
+      timeout: 300000
+    - name: security-scan
+      command: npm run security:scan
+      severity: WARN
+      timeout: 120000
+
+  storyComplete:
+    - name: acceptance-criteria
+      check: all_acs_verified
+      severity: BLOCK
+    - name: code-review
+      check: reviewer_approved
+      severity: BLOCK
+    - name: test-coverage
+      check: coverage_not_decreased
+      severity: WARN
+    - name: no-regressions
+      check: existing_tests_pass
+      severity: BLOCK
+
+  release:
+    - name: build
+      command: npm run build
+      severity: BLOCK
+      timeout: 300000
+    - name: changelog
+      check: changelog_updated
+      severity: WARN
+    - name: version-bump
+      check: version_updated
+      severity: BLOCK
+
+# =============================================================================
+# AI SCAFFOLDING
+# =============================================================================
+
+scaffolding:
+  enabled: true
+  providers:
+    - anthropic
+    - google
+    - openai
+  defaultProvider: anthropic
+  analysis:
+    detectFramework: true
+    detectTechStack: true
+    detectPatterns: true
+    extractAPIs: true
+    extractDataModels: true
+  generation:
+    agents: true
+    skills: true
+    workflows: true
+    docs: true
+
+# =============================================================================
+# MCP SERVER
+# =============================================================================
+
+mcp:
+  enabled: true
+  name: aios-nexus
+  version: 5.0.0
+  tools:
+    - init-context
+    - fill-scaffold
+    - sync-ide
+    - start-workflow
+    - advance-workflow
+    - get-status
+    - validate-context
+  resources:
+    - context://docs
+    - context://agents
+    - context://skills
+    - context://plans
+
+# =============================================================================
+# CLI CONFIGURATION
+# =============================================================================
+
+cli:
+  name: aios-nexus
+  binary: aios-nexus
+  commands:
+    - init
+    - install
+    - sync
+    - validate
+    - context
+    - workflow
+    - agent
+    - scaffold
+    - migrate
+  tui:
+    enabled: true
+    framework: ink
+  languages:
+    - en-US
+    - pt-BR
+    - es-ES
+  defaultLanguage: en-US
+
+# =============================================================================
+# AGENT CONFIGURATION
+# =============================================================================
+
+agents:
+  count: 15
+  location: .context/agents
+  defaultPhases:
+    orchestrator: [P, R, E, V, C]
+    architect: [P, R, E, V]
+    developer: [E, V]
+    qa: [V, C]
+    devops: [C]
+    security: [R, V]
+    data-engineer: [P, R, E]
+    pm: [P, R]
+    po: [P, R]
+    sm: [P]
+    analyst: [P, R]
+    reviewer: [R, V]
+    writer: [C]
+    optimizer: [R, V]
+    mobile: [E, V]
+
+# =============================================================================
+# HOOKS
+# =============================================================================
+
+hooks:
+  enabled: true
+  location: .aios-core/hooks
+  events:
+    - pre-tool-use
+    - post-tool-use
+    - pre-session
+    - post-session
+    - pre-commit
+    - post-commit
+
+# =============================================================================
+# TEMPLATES
+# =============================================================================
+
+templates:
+  location: .aios-core/development/templates
+  types:
+    - story
+    - prd
+    - architecture
+    - adr
+    - qa-report
+    - changelog
+    - readme
+
+# =============================================================================
+# CHECKLISTS
+# =============================================================================
+
+checklists:
+  location: .aios-core/development/checklists
+  types:
+    - story-draft
+    - story-dod
+    - code-review
+    - security-audit
+    - release
+    - migration
+
+# =============================================================================
+# MIGRATION
+# =============================================================================
+
+migration:
+  supportedFrom:
+    - aios-4.x
+    - ai-coders-context
+    - antigravity-kit
+    - ggai-nexus
+  autoBackup: true
+  preserveExisting: true

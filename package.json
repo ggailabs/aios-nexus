@@ -1,11 +1,13 @@
 {
-  "name": "aios-core",
-  "version": "4.2.13",
-  "description": "Synkra AIOS: AI-Orchestrated System for Full Stack Development - Core Framework",
+  "name": "aios-nexus",
+  "version": "5.0.0",
+  "description": "AIOS Nexus - Framework Unificado de Desenvolvimento com IA - PREVC Workflow, 15 Agents, MCP Server, Multi-IDE Sync",
   "bin": {
     "aios": "bin/aios.js",
     "aios-core": "bin/aios.js",
-    "aios-minimal": "bin/aios-minimal.js"
+    "aios-nexus": "bin/aios-nexus.js",
+    "aios-context": "bin/aios-context.js",
+    "aios-tui": "bin/aios-tui.js"
   },
   "preferGlobal": false,
   "workspaces": [
@@ -13,63 +15,41 @@
   ],
   "files": [
     "bin/",
+    "src/",
     "scripts/",
     "packages/",
     ".aios-core/",
-    ".claude/CLAUDE.md",
-    ".claude/rules/",
-    ".claude/hooks/",
-    "pro/license/",
+    ".context/",
+    ".claude/",
+    "tests/fixtures/",
     "README.md",
+    "README-NEXUS.md",
+    "CHANGELOG-NEXUS.md",
     "LICENSE"
   ],
+  "main": "src/index.js",
   "scripts": {
+    "postinstall": "node scripts/postinstall.js",
     "format": "prettier --write \"**/*.md\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:health-check": "mocha tests/health-check/**/*.test.js --timeout 30000",
     "lint": "eslint . --cache --cache-location .eslintcache",
     "typecheck": "tsc --noEmit",
     "release": "semantic-release",
-    "release:test": "semantic-release --dry-run --no-ci || echo 'Config test complete - authentication errors are expected locally'",
-    "generate:manifest": "node scripts/generate-install-manifest.js",
-    "validate:manifest": "node scripts/validate-manifest.js",
-    "validate:structure": "node .aios-core/infrastructure/scripts/source-tree-guardian/index.js",
-    "validate:agents": "node .aios-core/infrastructure/scripts/validate-agents.js",
-    "sync:ide": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync",
-    "sync:ide:validate": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate",
-    "sync:ide:check": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate --strict",
-    "sync:ide:claude": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync --ide claude-code",
-    "sync:ide:codex": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync --ide codex",
-    "sync:ide:gemini": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync --ide gemini",
-    "sync:ide:github-copilot": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync --ide github-copilot",
-    "sync:ide:antigravity": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync --ide antigravity",
-    "validate:claude-sync": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate --ide claude-code --strict",
-    "validate:claude-integration": "node .aios-core/infrastructure/scripts/validate-claude-integration.js",
-    "validate:codex-sync": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate --ide codex --strict",
-    "validate:codex-integration": "node .aios-core/infrastructure/scripts/validate-codex-integration.js",
-    "validate:gemini-sync": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate --ide gemini --strict",
-    "validate:github-copilot-sync": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate --ide github-copilot --strict",
-    "validate:antigravity-sync": "node .aios-core/infrastructure/scripts/ide-sync/index.js validate --ide antigravity --strict",
-    "validate:gemini-integration": "node .aios-core/infrastructure/scripts/validate-gemini-integration.js",
-    "sync:skills:codex": "node .aios-core/infrastructure/scripts/codex-skills-sync/index.js",
-    "sync:skills:codex:global": "node .aios-core/infrastructure/scripts/codex-skills-sync/index.js --global --global-only",
-    "validate:codex-skills": "node .aios-core/infrastructure/scripts/codex-skills-sync/validate.js --strict",
-    "validate:paths": "node .aios-core/infrastructure/scripts/validate-paths.js",
-    "validate:parity": "node .aios-core/infrastructure/scripts/validate-parity.js",
-    "validate:semantic-lint": "node scripts/semantic-lint.js",
-    "manifest:ensure": "node scripts/ensure-manifest.js",
-    "sync:ide:cursor": "node .aios-core/infrastructure/scripts/ide-sync/index.js sync --ide cursor",
-    "prepublishOnly": "npm run generate:manifest && npm run validate:manifest",
-    "prepare": "husky"
+    "sync:ide": "node bin/aios-nexus.js sync",
+    "validate": "node bin/aios-nexus.js validate",
+    "mcp": "node bin/aios-context.js",
+    "prepublishOnly": "npm run generate:manifest"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "@kayvan/markdown-tree-parser": "^1.5.0",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "ansi-to-html": "^0.7.2",
+    "boxen": "^8.0.1",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.3",
     "cli-progress": "^3.12.0",
@@ -79,40 +59,52 @@
     "fs-extra": "^11.3.2",
     "glob": "^10.4.4",
     "handlebars": "^4.7.8",
-    "inquirer": "^8.2.6",
+    "ink": "^4.4.1",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^5.0.1",
+    "inquirer": "^8.2.7",
     "js-yaml": "^4.1.0",
     "ora": "^5.4.1",
     "picocolors": "^1.1.1",
     "proper-lockfile": "^4.1.2",
+    "react": "^18.3.1",
     "semver": "^7.7.2",
-    "validator": "^13.15.15"
+    "validator": "^13.15.15",
+    "yaml": "^2.7.1",
+    "zod": "^4.3.6"
   },
   "keywords": [
     "ai",
     "aios",
+    "aios-nexus",
     "agile",
     "agents",
+    "mcp",
+    "model-context-protocol",
     "orchestrator",
     "fullstack",
     "development",
     "cli",
     "cross-platform",
     "interactive",
-    "wizard",
-    "modern-ux",
-    "vite-style",
-    "automation"
+    "workflow",
+    "prevc",
+    "multi-ide",
+    "scaffolding"
   ],
-  "author": "Synkra AIOS Team",
+  "author": "Guilherme Giorgi <contato@ggailabs.com>",
+  "contributors": [
+    "Genesis Grid AI Labs <contato@ggailabs.com>"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SynkraAI/aios-core.git"
+    "url": "git+https://github.com/ggailabs/aios-nexus.git"
   },
   "bugs": {
-    "url": "https://github.com/SynkraAI/aios-core/issues"
+    "url": "https://github.com/ggailabs/aios-nexus/issues"
   },
-  "homepage": "https://github.com/SynkraAI/aios-core#readme",
+  "homepage": "https://ggailabs.com/aios-nexus",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
@@ -133,22 +125,5 @@
     "semantic-release": "^25.0.2",
     "typescript": "^5.9.3",
     "yaml-lint": "^1.7.0"
-  },
-  "lint-staged": {
-    "*.{js,mjs,cjs,ts}": [
-      "eslint --fix --cache --cache-location .eslintcache",
-      "prettier --write"
-    ],
-    "*.md": [
-      "prettier --write",
-      "node scripts/semantic-lint.js --staged"
-    ],
-    ".aios-core/development/agents/*.md": [
-      "npm run sync:ide"
-    ]
-  },
-  "overrides": {
-    "tar": "^7.5.7",
-    "diff": "^8.0.3"
   }
 }
