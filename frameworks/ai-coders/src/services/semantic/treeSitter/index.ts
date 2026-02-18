@@ -1,1 +1,0 @@
-export { TreeSitterLayer } from './treeSitterLayer';
