@@ -3,44 +3,28 @@
   "version": "5.0.0",
   "description": "AIOS Nexus - Framework Unificado de Desenvolvimento com IA - PREVC Workflow, 15 Agents, MCP Server, Multi-IDE Sync",
   "bin": {
-    "aios": "bin/aios.js",
-    "aios-core": "bin/aios.js",
     "aios-nexus": "bin/aios-nexus.js",
     "aios-context": "bin/aios-context.js",
     "aios-tui": "bin/aios-tui.js"
   },
   "preferGlobal": false,
-  "workspaces": [
-    "packages/*"
-  ],
   "files": [
     "bin/",
     "src/",
     "scripts/",
-    "packages/",
     ".aios-core/",
     ".context/",
-    ".claude/",
     "tests/fixtures/",
     "README.md",
-    "README-NEXUS.md",
-    "CHANGELOG-NEXUS.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "main": "src/index.js",
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
-    "format": "prettier --write \"**/*.md\"",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "lint": "eslint . --cache --cache-location .eslintcache",
-    "typecheck": "tsc --noEmit",
-    "release": "semantic-release",
-    "sync:ide": "node bin/aios-nexus.js sync",
-    "validate": "node bin/aios-nexus.js validate",
-    "mcp": "node bin/aios-context.js",
-    "prepublishOnly": "npm run generate:manifest"
+    "lint": "eslint .",
+    "mcp": "node bin/aios-context.js"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
